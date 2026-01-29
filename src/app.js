@@ -21,9 +21,11 @@ app.use(express.static("public"));
 
 //import ROUTES
 import healthcheckRouter from "./routes/healthcheck.routes.js";
+import { errorHandler } from "./middlewares/error.middlewares.js";
 
 //ROUTES
 app.use("/api/v1/healthcheck", healthcheckRouter);
 app.use("/api/v1/users", userRouter);
 
+app.use(errorHandler);
 export { app };

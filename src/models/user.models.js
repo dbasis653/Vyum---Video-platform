@@ -68,14 +68,26 @@ const userSchema = new Schema(
 //Pre-Hooks
 //Encrypt password - bcrypt : npm i bcrypt
 //Dont use => bcz we need it's context
-userSchema.pre("save", async function (next) {
-  if (!this.modified("password")) return next();
+
+// userSchema.pre("save", async function (next) {
+//   if (!this.isModified("password")) return next();
+//   //if "password" is not modified return
+//   //when 1st time pass is set, then it is actually not modifying. It will return and not execute below codes
+
+//   this.password = await bcrypt.hash(this.password, 10);
+
+//   next(); //pass it to next hook or wherever it needs to go
+// });
+
+userSchema.pre("save", async function () {
+  if (!this.isModified("password")) return next();
   //if "password" is not modified return
   //when 1st time pass is set, then it is actually not modifying. It will return and not execute below codes
 
-  this.password = bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 10);
 
-  next(); //pass it to next hook or wherever it needs to go
+  // next();
+  //pass it to next hook or wherever it needs to go
 });
 
 userSchema.methods.isPasswordCorrect = async function (password) {
